@@ -1,0 +1,87 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+
+# Compiled files
+target/
+!target/*-sources.jar
+!target/*-javadoc.jar
+
+# IDE files
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+*.iws
+*.ipr
+.mvn/
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+logs/
+*.log
+surefire-reports/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env_example
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Test outputs
+test-output/
+surefire-reports/
+target/surefire-reports/
+
+# Application specific
+application-local.properties
+application-dev.properties
+application-*.local.properties
+
+# Docker volumes (если есть локальные)
+pgdata/
+*.sql.dump
+
+# Temporary files
+*.tmp
+*.temp
+*.pid

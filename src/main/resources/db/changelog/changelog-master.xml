@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+    http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+        
+    <!-- USERS -->
+    <changeSet id="001-create-users" author="alex">
+        <createTable tableName="users">
+            <column name="user_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(50)" defaultValue="USER">
+   				<constraints nullable="false"/>
+			</column>
+            <column name="status" type="VARCHAR(50)" defaultValue="ACTIVE"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="001a-add-check-role" author="alex">
+        <sql>ALTER TABLE users ADD CONSTRAINT chk_role CHECK (role IN ('ADMIN','USER'))</sql>
+    </changeSet>
+
+    <!-- CARDS -->
+    <changeSet id="002-create-cards" author="alex">
+        <createTable tableName="cards">
+            <column name="card_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="card_number" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="owner_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiration_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(50)" defaultValue="ACTIVE"/>
+            <column name="balance" type="NUMERIC(15,2)" defaultValueNumeric="0.00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Add foreign key constraint for cards with onDelete CASCADE -->
+    <changeSet id="002a-add-fk-cards-users" author="alex">
+        <addForeignKeyConstraint
+            constraintName="fk_cards_users"
+            baseTableName="cards"
+            baseColumnNames="user_id"
+            referencedTableName="users"
+            referencedColumnNames="user_id"
+            onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- TRANSACTIONS -->
+    <changeSet id="003-create-transactions" author="alex">
+        <createTable tableName="transactions">
+            <column name="transaction_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amount" type="NUMERIC(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="from_card_id" type="BIGINT"/>
+            <column name="to_card_id" type="BIGINT"/>
+            <column name="description" type="TEXT"/>
+            <column name="idempotency_key" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Add foreign key constraints for transactions with onDelete SET NULL -->
+    <changeSet id="003a-add-fk-transactions-cards" author="alex">
+        <addForeignKeyConstraint
+            constraintName="fk_txn_from_card"
+            baseTableName="transactions"
+            baseColumnNames="from_card_id"
+            referencedTableName="cards"
+            referencedColumnNames="card_id"
+            onDelete="SET NULL"/>
+            
+        <addForeignKeyConstraint
+            constraintName="fk_txn_to_card"
+            baseTableName="transactions"
+            baseColumnNames="to_card_id"
+            referencedTableName="cards"
+            referencedColumnNames="card_id"
+            onDelete="SET NULL"/>
+    </changeSet>
+
+</databaseChangeLog>

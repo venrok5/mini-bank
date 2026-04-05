@@ -1,0 +1,36 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/changelog-master.xml
+    drop-first: true
+    parameters:
+      secureParsing: false 
+      includeSystemClasspath: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test_minibank #test_minibank DB should exists
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true 
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  logging:
+    level:
+      liquibase: DEBUG
+      org.springframework.jdbc: DEBUG
+
+jwt:
+  secret: testSecretKeyForUnitTests1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
+  expiration-ms: 86400000
+  algorithm: HS512
